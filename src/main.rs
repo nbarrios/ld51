@@ -1,4 +1,4 @@
-use bevy::{prelude::*, render::{camera::ScalingMode, view::visibility}};
+use bevy::{prelude::*, render::{camera::ScalingMode}};
 use iyes_loopless::prelude::*;
 use bevy_asset_loader::prelude::*;
 
@@ -29,7 +29,6 @@ fn main() {
 enum GameStates {
     Loading,
     Run,
-    GameOver,
 }
 
 #[derive(AssetCollection)]
@@ -95,7 +94,7 @@ fn setup(
 }
 
 fn update(
-    mut commands: Commands,
+    mut _commands: Commands,
     time: Res<Time>,
     mut game_data: ResMut<GameData>,
     kb_input: Res<Input<KeyCode>>,
