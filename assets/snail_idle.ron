@@ -1,0 +1,117 @@
+// Simple plain text exporter for demo purposes
+// See http://www.grantlee.org/apidox/for_themers.html for more information
+// SmartUpdateHash: $TexturePacker:SmartUpdate:19ee4803fc7e662446af2a4d252b3942:8514755e1ffbee9d2625f84905b3d13a:dca9ca7346adabd29ae9dc0de00b3037$
+
+(
+    path: "snail_idle.png",
+    width: 5410,
+    height: 3246,
+
+    sprites: NamedSprites ([
+        (
+            name: "snail-red-idle_0001",
+            x: 1,
+            y: 1,
+            w: 1080,
+            h: 1080
+        ),
+        (
+            name: "snail-red-idle_0002",
+            x: 1,
+            y: 1083,
+            w: 1080,
+            h: 1080
+        ),
+        (
+            name: "snail-red-idle_0003",
+            x: 1,
+            y: 2165,
+            w: 1080,
+            h: 1080
+        ),
+        (
+            name: "snail-red-idle_0004",
+            x: 1083,
+            y: 1,
+            w: 1080,
+            h: 1080
+        ),
+        (
+            name: "snail-red-idle_0005",
+            x: 1083,
+            y: 1083,
+            w: 1080,
+            h: 1080
+        ),
+        (
+            name: "snail-red-idle_0006",
+            x: 1083,
+            y: 2165,
+            w: 1080,
+            h: 1080
+        ),
+        (
+            name: "snail-red-idle_0007",
+            x: 2165,
+            y: 1,
+            w: 1080,
+            h: 1080
+        ),
+        (
+            name: "snail-red-idle_0008",
+            x: 2165,
+            y: 1083,
+            w: 1080,
+            h: 1080
+        ),
+        (
+            name: "snail-red-idle_0009",
+            x: 2165,
+            y: 2165,
+            w: 1080,
+            h: 1080
+        ),
+        (
+            name: "snail-red-idle_0010",
+            x: 3247,
+            y: 1,
+            w: 1080,
+            h: 1080
+        ),
+        (
+            name: "snail-red-idle_0011",
+            x: 4329,
+            y: 1,
+            w: 1080,
+            h: 1080
+        ),
+        (
+            name: "snail-red-idle_0012",
+            x: 3247,
+            y: 1083,
+            w: 1080,
+            h: 1080
+        ),
+        (
+            name: "snail-red-idle_0013",
+            x: 3247,
+            y: 2165,
+            w: 1080,
+            h: 1080
+        ),
+        (
+            name: "snail-red-idle_0014",
+            x: 4329,
+            y: 1083,
+            w: 1080,
+            h: 1080
+        ),
+        (
+            name: "snail-red-idle_0015",
+            x: 4329,
+            y: 2165,
+            w: 1080,
+            h: 1080
+        ),
+])
+)
