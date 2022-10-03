@@ -11,6 +11,7 @@ bevy = { version = "0.8.1" }
 bevy-web-resizer = "3.0.0"
 bevy_asset_loader = { version = "0.12.1" }
 bevy_ggrs = "0.10.0"
+bevy_heterogeneous_texture_atlas_loader = "0.7.1"
 console_error_panic_hook = "0.1.7"
 ggrs = "0.9.2"
 matchbox_socket = { version = "0.3.0", features = ["ggrs-socket"] }

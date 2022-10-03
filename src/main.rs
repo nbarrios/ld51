@@ -1,10 +1,14 @@
-use bevy::{prelude::*, render::camera::ScalingMode, sprite::Anchor};
+mod input;
+mod race;
+
+use bevy::{prelude::*};
 use bevy_asset_loader::prelude::*;
 use bevy_ggrs::*;
-use ggrs::InputStatus;
+use bevy_heterogeneous_texture_atlas_loader::*;
+use ggrs::PlayerHandle;
 use matchbox_socket::WebRtcSocket;
 
-struct GgrsConfig;
+pub struct GgrsConfig;
 
 impl ggrs::Config for GgrsConfig {
     // 4-directions + fire fits easily in a single byte
@@ -14,7 +18,7 @@ impl ggrs::Config for GgrsConfig {
     type Address = String;
 }
 
-struct LocalPlayerHandle(usize);
+pub struct LocalPlayerHandle(PlayerHandle);
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]
 enum GameState {
@@ -24,24 +28,48 @@ enum GameState {
 }
 
 #[derive(AssetCollection)]
-struct GameAssets {
-    #[asset(path = "fonts/NotoSansMono-Bold.ttf")]
+pub struct GameAssets {
+    #[asset(path = "fonts/waterst2.ttf")]
     font: Handle<Font>,
-    #[asset(path = "textures/snailtest02.png")]
-    snail: Handle<Image>,
     #[asset(path = "textures/ground-grass-seamless_00.png")]
     grass: Handle<Image>,
+    #[asset(path = "snail_idle.ron")]
+    snail_idle: Handle<TextureAtlas>,
 }
 
 #[derive(Component)]
-struct Player {
+pub struct Player {
     handle: usize,
 }
 
-struct GameData {
+#[derive(Component, Default, Reflect)]
+pub struct PlayerTimer {
     timer: Timer,
+}
+
+#[derive(Component, Default, Reflect)]
+pub struct PlayerTarget {
+    x: f32,
+}
+
+#[derive(Component)]
+pub struct PlayerLocal;
+
+pub struct GameData {
+    cooldown_timer: Timer,
+    on_cooldown: bool,
     threshold: f32,
 }
+
+pub struct MatchmakingTimer {
+    timer: Timer,
+}
+
+#[derive(Component, Deref)]
+pub struct Animation(benimator::Animation);
+
+#[derive(Default, Component, Deref, DerefMut)]
+pub struct AnimationState(benimator::State);
 
 fn main() {
     // When building for WASM, print panics to the browser console
@@ -51,29 +79,38 @@ fn main() {
     let mut app = App::new();
 
     GGRSPlugin::<GgrsConfig>::new()
-        .with_input_system(input)
+        .with_input_system(input::input)
         .with_rollback_schedule(
             Schedule::default().with_stage(
                 "ROLLBACK_STAGE",
                 SystemStage::single_threaded()
                     .with_system_set(State::<GameState>::get_driver())
-                    .with_system_set(SystemSet::on_update(GameState::InGame).with_system(update)),
+                    .with_system_set(SystemSet::on_update(GameState::InGame)
+                        .with_system(race::update)
+                        .with_system(race::animate)
+                    ),
             ),
         )
         .register_rollback_type::<Transform>()
+        .register_rollback_type::<PlayerTimer>()
         .build(&mut app);
 
     app.insert_resource(WindowDescriptor {
         title: "LD51".to_string(),
         ..Default::default()
     })
-    .insert_resource(ClearColor(Color::BLACK))
+    .insert_resource(ClearColor(Color::Rgba { red: 185.0 / 255.0, green: 229.0 / 255.0, blue: 241.0 / 255.0, alpha: 1.0 }))
     .insert_resource(GameData {
-        timer: Timer::from_seconds(20.0, true),
+        cooldown_timer: Timer::from_seconds(3.0, false),
+        on_cooldown: false,
         threshold: 9.0,
+    })
+    .insert_resource(MatchmakingTimer {
+        timer: Timer::from_seconds(5.0, false),
     })
     .add_plugins(DefaultPlugins)
     .add_plugin(bevy_web_resizer::Plugin)
+    .add_plugin(TextureAtlasLoaderPlugin)
     .add_loading_state(
         LoadingState::new(GameState::Loading)
             .continue_to_state(GameState::Matchmaking)
@@ -83,10 +120,11 @@ fn main() {
     .add_system_set(
         SystemSet::on_enter(GameState::Matchmaking)
             .with_system(start_matchbox_socket)
-            .with_system(setup),
+            .with_system(race::setup),
     )
     .add_system_set(SystemSet::on_update(GameState::Matchmaking).with_system(wait_for_players))
-    .add_system_set(SystemSet::on_enter(GameState::InGame).with_system(spawn_players))
+    .add_system_set(SystemSet::on_enter(GameState::InGame).with_system(race::spawn_players))
+    .add_system_set(SystemSet::on_update(GameState::InGame).with_system(race::camera_control))
     .run();
 }
 
@@ -94,7 +132,7 @@ fn main() {
 fn start_matchbox_socket(mut commands: Commands) {
     use bevy::tasks::IoTaskPool;
 
-    let room_url = "ws://150.230.44.222:3536/next_2";
+    let room_url = "wss://snails.nickspeaks.com/next_2";
     info!("Connecting to matchbox server: {:?}", room_url);
 
     let (socket, message_loop) = WebRtcSocket::new(room_url);
@@ -104,10 +142,14 @@ fn start_matchbox_socket(mut commands: Commands) {
 }
 
 fn wait_for_players(
+    time: Res<Time>,
+    mut timer: ResMut<MatchmakingTimer>,
     mut commands: Commands,
     mut socket: ResMut<Option<WebRtcSocket>>,
     mut state: ResMut<State<GameState>>,
 ) {
+    timer.timer.tick(time.delta());
+
     let socket = socket.as_mut();
 
     if socket.is_none() {
@@ -117,15 +159,17 @@ fn wait_for_players(
     socket.as_mut().unwrap().accept_new_connections();
     let players = socket.as_ref().unwrap().players();
 
-    let num_players = 2;
-    if players.len() < num_players {
-        return;
+    let num_players = 3;
+    if !timer.timer.finished() {
+        if players.len() < num_players {
+            return;
+        }
     }
 
     info!("All players connected");
 
     let mut session_builder = ggrs::SessionBuilder::<GgrsConfig>::new()
-        .with_num_players(num_players)
+        .with_num_players(players.len())
         .with_max_prediction_window(12)
         .with_input_delay(2);
 
@@ -150,121 +194,4 @@ fn wait_for_players(
     commands.insert_resource(SessionType::P2PSession);
 
     state.set(GameState::InGame).unwrap();
-}
-
-fn setup(
-    mut commands: Commands, 
-    game_assets: Res<GameAssets>
-) {
-    let mut camera = Camera2dBundle::default();
-    camera.projection.scaling_mode = ScalingMode::FixedHorizontal(1920.0);
-    commands.spawn_bundle(camera);
-
-    for i in 0..=3 {
-        commands.spawn_bundle(SpriteBundle {
-            sprite: Sprite {
-                anchor: Anchor::BottomLeft,
-                ..default()
-            },
-            texture: game_assets.grass.clone(), 
-            transform: Transform::from_translation(Vec3::new(1920.0 * -0.5 + (i as f32) * 500.0, -540.0, 0.0)),
-            ..default()
-        });
-    }
-
-    let text_style = TextStyle {
-        font: game_assets.font.clone(),
-        font_size: 100.0,
-        color: Color::WHITE,
-    };
-
-    commands.spawn_bundle(Text2dBundle {
-        text: Text::from_section("0.00", text_style.clone()).with_alignment(TextAlignment::CENTER),
-        transform: Transform::from_translation(Vec3::new(0.0, 540.0 - 60.0, 1.0)),
-        ..default()
-    });
-}
-
-fn spawn_players(
-    mut commands: Commands,
-    mut rip: ResMut<RollbackIdProvider>,
-    assets: Res<GameAssets>,
-    session: Res<ggrs::P2PSession<GgrsConfig>>,
-    player_query: Query<Entity, With<Player>>,
-) {
-    //Despawn Old Players
-    for player in player_query.iter() {
-        commands.entity(player).despawn_recursive();
-    }
-
-    let num_players = session.num_players();
-    info!("Spawning {} players", num_players);
-
-    for i in 0..num_players {
-        commands
-            .spawn_bundle(SpriteBundle {
-                sprite: Sprite {
-                    ..default()
-                },
-                texture: assets.snail.clone(), 
-                transform: Transform::from_translation(Vec3::new(
-                    1920.0 * -0.5 + 50.0,
-                    250.0 * (i as f32),
-                    1.0,
-                )),
-                ..default()
-            })
-            .insert(Player { handle: i })
-            .insert(Rollback::new(rip.next_id()));
-    }
-}
-
-const INPUT_SPACE: u8 = 1 << 0;
-
-fn input(_: In<ggrs::PlayerHandle>, keys: Res<Input<KeyCode>>) -> u8 {
-    let mut input = 0u8;
-
-    if keys.just_pressed(KeyCode::Space) {
-        input |= INPUT_SPACE;
-    }
-
-    input
-}
-
-fn update(
-    mut _commands: Commands,
-    time: Res<Time>,
-    mut game_data: ResMut<GameData>,
-    inputs: Res<Vec<(u8, InputStatus)>>,
-    mut query: Query<(&mut Transform, &Player)>,
-    mut text_query: Query<(&mut Text, &mut Visibility)>,
-) {
-    game_data.timer.tick(time.delta());
-    let (mut text, mut visibility) = text_query.single_mut();
-    text.sections[0].value = format!("{:.2}", game_data.timer.elapsed_secs() % 10.0);
-
-    if game_data.timer.elapsed_secs() > game_data.threshold {
-        visibility.is_visible = false;
-    } else {
-        visibility.is_visible = true;
-    }
-
-    for (mut transform, player) in &mut query {
-        let input = match inputs[player.handle].1 {
-            InputStatus::Confirmed => inputs[player.handle].0,
-            InputStatus::Predicted => inputs[player.handle].0,
-            InputStatus::Disconnected => 0,
-        };
-
-        if input & INPUT_SPACE != 0 {
-            let distance = (game_data.timer.elapsed_secs() - 10.0).abs() % 10.0;
-            info!("Distance: {}", distance);
-            //transform.translation.x += 10.0 / distance.clamp(0.01, 10.0);
-            transform.translation.x += 50.0;
-
-            game_data.threshold -= 1.0;
-            game_data.threshold = game_data.threshold.clamp(1.0, 9.0);
-            game_data.timer.reset();
-        }
-    }
 }

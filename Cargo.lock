@@ -791,6 +791,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy_heterogeneous_texture_atlas_loader"
+version = "0.7.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3c9ac768a7b7b000cf0f235c39e0fc160fb4fd5b32b71f681c457cd064c6c5c3"
+dependencies = [
+ "anyhow",
+ "bevy",
+ "ron",
+ "serde",
+]
+
+[[package]]
 name = "bevy_hierarchy"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3066,6 +3078,7 @@ dependencies = [
  "bevy-web-resizer",
  "bevy_asset_loader",
  "bevy_ggrs",
+ "bevy_heterogeneous_texture_atlas_loader",
  "console_error_panic_hook",
  "ggrs",
  "matchbox_socket",
