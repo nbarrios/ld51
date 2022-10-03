@@ -1,117 +1,222 @@
 // Simple plain text exporter for demo purposes
 // See http://www.grantlee.org/apidox/for_themers.html for more information
-// SmartUpdateHash: $TexturePacker:SmartUpdate:19ee4803fc7e662446af2a4d252b3942:8514755e1ffbee9d2625f84905b3d13a:dca9ca7346adabd29ae9dc0de00b3037$
+// SmartUpdateHash: $TexturePacker:SmartUpdate:5509a5692b25d4db37309fed9d9122f1:a81abe1b6448bc6dfeeac3bad46b37af:dca9ca7346adabd29ae9dc0de00b3037$
 
 (
     path: "snail_idle.png",
-    width: 5410,
-    height: 3246,
+    width: 3612,
+    height: 1510,
 
     sprites: NamedSprites ([
         (
-            name: "snail-red-idle_0001",
+            name: "snail-red--miss_0001",
             x: 1,
             y: 1,
-            w: 1080,
-            h: 1080
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red--miss_0002",
+            x: 603,
+            y: 1,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red--miss_0003",
+            x: 1205,
+            y: 1,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red--miss_0004",
+            x: 1807,
+            y: 1,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red--miss_0005",
+            x: 2409,
+            y: 1,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red--miss_0006",
+            x: 3011,
+            y: 1,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red--miss_0007",
+            x: 1,
+            y: 303,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red--miss_0008",
+            x: 603,
+            y: 303,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red--miss_0009",
+            x: 1205,
+            y: 303,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red--miss_0010",
+            x: 1807,
+            y: 303,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red--miss_0011",
+            x: 2409,
+            y: 303,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red--miss_0012",
+            x: 3011,
+            y: 303,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red--miss_0013",
+            x: 1,
+            y: 605,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red--miss_0014",
+            x: 603,
+            y: 605,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red--miss_0015",
+            x: 1205,
+            y: 605,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-idle_0001",
+            x: 1807,
+            y: 605,
+            w: 600,
+            h: 300
         ),
         (
             name: "snail-red-idle_0002",
-            x: 1,
-            y: 1083,
-            w: 1080,
-            h: 1080
+            x: 2409,
+            y: 605,
+            w: 600,
+            h: 300
         ),
         (
             name: "snail-red-idle_0003",
-            x: 1,
-            y: 2165,
-            w: 1080,
-            h: 1080
+            x: 3011,
+            y: 605,
+            w: 600,
+            h: 300
         ),
         (
             name: "snail-red-idle_0004",
-            x: 1083,
-            y: 1,
-            w: 1080,
-            h: 1080
+            x: 1,
+            y: 907,
+            w: 600,
+            h: 300
         ),
         (
             name: "snail-red-idle_0005",
-            x: 1083,
-            y: 1083,
-            w: 1080,
-            h: 1080
+            x: 603,
+            y: 907,
+            w: 600,
+            h: 300
         ),
         (
             name: "snail-red-idle_0006",
-            x: 1083,
-            y: 2165,
-            w: 1080,
-            h: 1080
+            x: 1205,
+            y: 907,
+            w: 600,
+            h: 300
         ),
         (
             name: "snail-red-idle_0007",
-            x: 2165,
-            y: 1,
-            w: 1080,
-            h: 1080
+            x: 1807,
+            y: 907,
+            w: 600,
+            h: 300
         ),
         (
             name: "snail-red-idle_0008",
-            x: 2165,
-            y: 1083,
-            w: 1080,
-            h: 1080
+            x: 2409,
+            y: 907,
+            w: 600,
+            h: 300
         ),
         (
             name: "snail-red-idle_0009",
-            x: 2165,
-            y: 2165,
-            w: 1080,
-            h: 1080
+            x: 3011,
+            y: 907,
+            w: 600,
+            h: 300
         ),
         (
             name: "snail-red-idle_0010",
-            x: 3247,
-            y: 1,
-            w: 1080,
-            h: 1080
+            x: 1,
+            y: 1209,
+            w: 600,
+            h: 300
         ),
         (
             name: "snail-red-idle_0011",
-            x: 4329,
-            y: 1,
-            w: 1080,
-            h: 1080
+            x: 603,
+            y: 1209,
+            w: 600,
+            h: 300
         ),
         (
             name: "snail-red-idle_0012",
-            x: 3247,
-            y: 1083,
-            w: 1080,
-            h: 1080
+            x: 1205,
+            y: 1209,
+            w: 600,
+            h: 300
         ),
         (
             name: "snail-red-idle_0013",
-            x: 3247,
-            y: 2165,
-            w: 1080,
-            h: 1080
+            x: 1807,
+            y: 1209,
+            w: 600,
+            h: 300
         ),
         (
             name: "snail-red-idle_0014",
-            x: 4329,
-            y: 1083,
-            w: 1080,
-            h: 1080
+            x: 2409,
+            y: 1209,
+            w: 600,
+            h: 300
         ),
         (
             name: "snail-red-idle_0015",
-            x: 4329,
-            y: 2165,
-            w: 1080,
-            h: 1080
+            x: 3011,
+            y: 1209,
+            w: 600,
+            h: 300
         ),
 ])
 )
