@@ -1,28 +1,51 @@
 use crate::{
-    input, Animation, AnimationState, GameAssets, GameData, GgrsConfig, LocalPlayerHandle, Player,
-    PlayerTimer, PlayerTarget, PlayerLocal
+    input, Animation, AnimationState, GameAssets, GameData, LocalPlayerHandle, Player,
+    PlayerTimer, PlayerTarget, PlayerLocal, GameState
 };
 use benimator::FrameRate;
-use bevy::{prelude::*, render::camera::ScalingMode, sprite::Anchor};
+use bevy::{prelude::*, time::Stopwatch, render::camera::ScalingMode, sprite::Anchor, utils::Duration};
 use bevy_ggrs::*;
 use ggrs::InputStatus;
+use crate::lobby;
 
-const SPAWN_X: f32 = 1920.0 * -0.5 + 100.0;
+const SPAWN_X: f32 = 1920.0 * -0.25;
+const TIMINGS: [f32; 5] = [10.0, 5.0, 3.0, 2.0, 1.0];
 
-pub fn setup(mut commands: Commands, game_assets: Res<GameAssets>) {
+#[derive(Debug, Eq, PartialEq)]
+pub enum Alert {
+    Miss,
+    Ok,
+    Good,
+    Perfect
+}
+
+#[derive(Component)]
+pub struct AlertSprite;
+
+#[derive(Component)]
+pub struct IndicatorCursor;
+
+pub fn setup(
+    mut commands: Commands,
+    game_assets: Res<GameAssets>,
+    audio: Res<Audio>
+) {
     let mut camera = Camera2dBundle::default();
-    camera.projection.scaling_mode = ScalingMode::FixedHorizontal(1920.0);
-    let camera_id = commands.spawn_bundle(camera).id();
+    camera.projection.scaling_mode = ScalingMode::FixedVertical(1080.0);
+    commands.spawn_bundle(camera);
 
-    for i in 0..=9 {
+    for i in 0..=30 {
         commands.spawn_bundle(SpriteBundle {
             sprite: Sprite {
                 anchor: Anchor::BottomLeft,
                 ..default()
             },
-            texture: game_assets.grass.clone(),
+            texture: match i {
+                26 => game_assets.finish.clone(),
+                _  => game_assets.grass.clone()
+            },
             transform: Transform::from_translation(Vec3::new(
-                1920.0 * -0.5 + (i as f32) * 500.0,
+                1920.0 * -1.5 + (i as f32) * 500.0,
                 -540.0,
                 0.0,
             )),
@@ -30,24 +53,55 @@ pub fn setup(mut commands: Commands, game_assets: Res<GameAssets>) {
         });
     }
 
-    let text_style = TextStyle {
-        font: game_assets.font.clone(),
-        font_size: 100.0,
-        color: Color::WHITE,
-    };
+    commands
+        .spawn_bundle(NodeBundle {
+            style: Style {
+                size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
+                position_type: PositionType::Absolute,
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::FlexEnd,
+                ..default()
+            },
+            color: Color::NONE.into(),
+            ..default()
+        })
+        .with_children(|parent| {
+            parent.spawn_bundle(
+                TextBundle::from_section(
+                "0.00",
+                TextStyle {
+                    font: game_assets.font.clone(),
+                    font_size: 60.0,
+                    color: Color::WHITE,
+                },
+                )
+                .with_text_alignment(TextAlignment::TOP_CENTER)
+                .with_style(Style {
+                    align_self: AlignSelf::FlexEnd,
+                    position_type: PositionType::Relative,
+                    position: UiRect {
+                        top: Val::Px(20.0),
+                        left: Val::Px(0.0),
+                        right: Val::Px(0.0),
+                        ..default()
+                    },
+                    ..Default::default()
+                })
+            );
+        });
 
-    let text_id = commands.spawn_bundle(Text2dBundle {
-        text: Text::from_section("0.00", text_style.clone()).with_alignment(TextAlignment::CENTER),
-        transform: Transform::from_translation(Vec3::new(0.0, 540.0 - 60.0, 1.0)),
-        ..default()
-    }).id();
+     //Audio
+    let _weak_handle = audio.play_with_settings(
+        game_assets.music.clone(),
+        PlaybackSettings::LOOP.with_volume(0.25),
+    );
 }
 
 pub fn spawn_players(
     mut commands: Commands,
     mut rip: ResMut<RollbackIdProvider>,
     assets: Res<GameAssets>,
-    session: Res<ggrs::P2PSession<GgrsConfig>>,
+    session: Res<ggrs::P2PSession<lobby::GgrsConfig>>,
     local_handle: Res<LocalPlayerHandle>,
     player_query: Query<Entity, With<Player>>,
 ) {
@@ -61,6 +115,7 @@ pub fn spawn_players(
 
     let colors = vec![Color::WHITE, Color::CYAN, Color::GOLD, Color::GREEN];
     for i in 0..num_players {
+        let spawn_y = -100.0 + 250.0 * (i as f32); 
         let mut builder = commands
             .spawn_bundle(SpriteSheetBundle {
                 sprite: TextureAtlasSprite {
@@ -71,21 +126,28 @@ pub fn spawn_players(
                 texture_atlas: assets.snail_idle.clone(),
                 transform: Transform::from_translation(Vec3::new(
                     SPAWN_X,
-                    -100.0 + 250.0 * (i as f32),
-                    1.0,
+                    spawn_y,
+                    2.0,
                 )),
                 ..default()
             });
 
-        builder.insert(Player { handle: i })
+        builder
+            .insert(Player {
+                handle: i, 
+                cooldown_timer: Timer::from_seconds(0.5, false),
+                on_cooldown: false,
+                timing_index: 0,
+            })
             .insert(PlayerTimer {
-                timer: Timer::from_seconds(20.0, true),
+                timer: Timer::from_seconds(20.0, false),
+                stopwatch: Stopwatch::new()
             })
             .insert(PlayerTarget {
                 x: SPAWN_X,
             })
             .insert(Animation(benimator::Animation::from_indices(
-                0..15,
+                15..30,
                 FrameRate::from_fps(12.0),
             )))
             .insert(AnimationState::default())
@@ -93,7 +155,46 @@ pub fn spawn_players(
 
         if i == local_handle.0 {
             builder.insert(PlayerLocal);
+            let player_id = builder.id();
+
+            //Indicator Cursor
+            let indicator_target_id = commands.spawn_bundle(
+                SpriteBundle {
+                    sprite: Sprite {
+                        ..default()
+                    },
+                    texture: assets.indicator_target.clone(),
+                    transform: Transform::from_translation(Vec3::new(
+                        0.0,
+                        -90.0,
+                        -1.0,
+                    )),
+                    ..default()
+                }
+            ).id();
+
+            //Indicator Target
+            let indicator_cursor_id = commands.spawn_bundle(
+                SpriteBundle {
+                    sprite: Sprite {
+                        ..default()
+                    },
+                    texture: assets.indicator_cursor.clone(),
+                    transform: Transform::from_translation(Vec3::new(
+                        0.0,
+                        -90.0,
+                        -1.0,
+                    )),
+                    ..default()
+                }
+            )
+            .insert(IndicatorCursor)
+            .id();
+
+            commands.entity(player_id).add_child(indicator_target_id);
+            commands.entity(player_id).add_child(indicator_cursor_id);
         }
+
     }
 }
 
@@ -109,33 +210,24 @@ pub fn animate(
 
 pub fn update(
     mut _commands: Commands,
-    time: Res<Time>,
     mut game_data: ResMut<GameData>,
     inputs: Res<Vec<(u8, InputStatus)>>,
     local_handle: Res<LocalPlayerHandle>,
-    mut query: Query<(&mut Transform, &mut PlayerTarget, &mut PlayerTimer, &Player)>,
-    mut text_query: Query<(&mut Text, &mut Visibility)>,
+    mut query: Query<(&mut Transform, &mut PlayerTarget, &mut PlayerTimer, &mut Player)>,
+    mut text_query: Query<&mut Text>,
+    mut cursor: Query<&mut Transform, (With<IndicatorCursor>, Without<Player>)>,
+    mut ev_alert: EventWriter<Alert>,
+    mut state: ResMut<State<GameState>>,
 ) {
-    // if game_data.timer.elapsed_secs() > game_data.threshold {
-    //     visibility.is_visible = false;
-    // } else {
-    //     visibility.is_visible = true;
-    // }
-
-    if game_data.on_cooldown {
-        game_data.cooldown_timer.tick(time.delta());
-        if game_data.cooldown_timer.just_finished() {
-            game_data.on_cooldown = false;
-            game_data.cooldown_timer.reset();
-        }
-    }
-
-    for (mut transform, mut target, mut player_timer, player) in &mut query {
-        player_timer.timer.tick(time.delta());
+    for (mut transform, mut target, mut player_timer, mut player) in &mut query {
 
         if player.handle == local_handle.0 {
-            let (mut text, mut visibility) = text_query.single_mut();
-            text.sections[0].value = format!("{:.2}", player_timer.timer.elapsed_secs() % 10.0);
+            let elapsed = player_timer.stopwatch.elapsed_secs();
+            let mut text = text_query.single_mut();
+            text.sections[0].value = format!("{:.2}", elapsed);
+
+            let mut cursor_transform = cursor.single_mut();
+            cursor_transform.translation.x = -1920.0 + 1920.0 * 2.0 * player_timer.timer.percent_left();
         }
 
         let input = match inputs[player.handle].1 {
@@ -144,27 +236,125 @@ pub fn update(
             InputStatus::Disconnected => 0,
         };
 
-        if input & input::INPUT_SPACE != 0 && !game_data.on_cooldown {
-            let distance = (player_timer.timer.elapsed_secs() - 10.0).abs() % 10.0;
-            info!("Distance: {}", distance);
-            target.x += match distance {
-                x if x < 0.1 => 500.0,
-                x if x < 0.5 => 250.0,
-                x if x < 1.0 => 125.0,
-                x if x < 2.0 => 50.0,
-                _ => 0.0,
+        if input & input::INPUT_SPACE != 0 && !player.on_cooldown {
+            let threshold = match (player_timer.timer.percent_left() - 0.5).abs() {
+                x if x < 0.01 => Alert::Perfect,
+                x if x < 0.05 => Alert::Good,
+                x if x < 0.1 => Alert::Ok,
+                _ => Alert::Miss,
             };
+ 
+            target.x += match threshold {
+                Alert::Perfect => 500.0,
+                Alert::Good => 250.0,
+                Alert::Ok => 125.0,
+                Alert::Miss => 0.0,
+            };
+
+            ev_alert.send(threshold);
+
+            if (player_timer.timer.percent_left() - 0.5).abs() < 0.05 {
+                player.timing_index += 1;
+            } else {
+                player.timing_index = 0;
+            }
+            player.timing_index = player.timing_index.clamp(0, TIMINGS.len() - 1);
+            let next_timer = TIMINGS[player.timing_index];
 
             game_data.threshold -= 1.0;
             game_data.threshold = game_data.threshold.clamp(1.0, 9.0);
+            player_timer.timer.set_duration(Duration::from_secs_f32(next_timer * 2.0));
             player_timer.timer.reset();
-            game_data.on_cooldown = true;
+            player.on_cooldown = true;
+        } else {
+            if player_timer.timer.percent_left() < 0.35 {
+                player.timing_index = 0;
+                let next_timer = TIMINGS[player.timing_index];
+                player_timer.timer.set_duration(Duration::from_secs_f32(next_timer * 2.0));
+                player_timer.timer.reset();
+
+                ev_alert.send(Alert::Miss);
+            }
         }
 
         transform.translation = transform.translation.lerp(
             Vec3::new(target.x, transform.translation.y, transform.translation.z),
             0.05,
         );
+
+        if transform.translation.x > 10300.0 {
+            player_timer.stopwatch.pause();
+            state.set(GameState::End).unwrap();
+        }
+    }
+}
+
+pub fn feedback_spawn(
+    mut commands: Commands, 
+    assets: Res<GameAssets>, 
+    mut ev_alert: EventReader<Alert>,
+    player_query: Query<&Transform, With<PlayerLocal>>,
+    audio: Res<Audio>,
+) {
+    let player_transform = player_query.single();
+    for ev in ev_alert.iter() {
+        commands.spawn_bundle(SpriteBundle {
+            sprite: Sprite {
+                ..default()
+            },
+            texture: match ev {
+                Alert::Perfect => assets.alert_perfect.clone(),
+                Alert::Good => assets.alert_good.clone(),
+                Alert::Ok => assets.alert_ok.clone(),
+                Alert::Miss => assets.alert_miss.clone(),
+            },
+            transform: Transform::from_translation(Vec3::new(
+                player_transform.translation.x + 600.0,
+                100.0,
+                1.0,
+            )),
+            ..default()
+        })
+        .insert(AlertSprite);
+
+        if ev != &Alert::Miss {
+            let _weak_handle = audio.play_with_settings(
+                assets.match_sound.clone(),
+                PlaybackSettings::ONCE.with_volume(0.5),
+            );
+        }
+    }
+}
+
+pub fn feedback_update(
+    mut commands: Commands,
+    time: Res<Time>,
+    mut query: Query<(Entity, &mut Sprite), With<AlertSprite>>,
+) {
+    for (entity, mut sprite) in query.iter_mut() {
+        let alpha = sprite.color.a();
+        sprite.color.set_a(alpha - 1.0 * time.delta_seconds());
+        if sprite.color.a() <= 0.0 {
+            commands.entity(entity).despawn_recursive();
+        }
+    }
+}
+
+pub fn tick_timers(
+    time: Res<Time>,
+    mut timer_query: Query<(&mut PlayerTimer, &mut Player)>,
+) {
+    for (mut timer, mut player) in &mut timer_query {
+        timer.timer.tick(time.delta());
+        timer.stopwatch.tick(time.delta());
+
+        if player.on_cooldown {
+            player.cooldown_timer.tick(time.delta());
+            if player.cooldown_timer.just_finished() {
+                player.on_cooldown = false;
+                player.cooldown_timer.reset();
+            }
+        }
     }
 }
 
