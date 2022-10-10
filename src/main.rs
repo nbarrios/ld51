@@ -5,11 +5,9 @@ mod end_menu;
 
 use bevy::{prelude::*, time::Stopwatch};
 use bevy_asset_loader::prelude::*;
-use bevy_ggrs::*;
 use bevy_heterogeneous_texture_atlas_loader::*;
-use ggrs::PlayerHandle;
 
-pub struct LocalPlayerHandle(PlayerHandle);
+pub struct LocalPlayerHandle(usize);
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]
 pub enum GameState {
@@ -74,11 +72,7 @@ pub struct PlayerTarget {
 pub struct PlayerLocal;
 
 pub struct GameData {
-    threshold: f32,
-}
-
-pub struct MatchmakingTimer {
-    timer: Timer,
+    camera: Option<Entity>
 }
 
 #[derive(Component, Deref)]
@@ -94,23 +88,6 @@ fn main() {
 
     let mut app = App::new();
 
-    GGRSPlugin::<lobby::GgrsConfig>::new()
-        .with_update_frequency(60)
-        .with_input_system(input::input)
-        .with_rollback_schedule(
-            Schedule::default().with_stage(
-                "ROLLBACK_STAGE",
-                SystemStage::parallel()
-                    .with_system_set(State::<GameState>::get_driver())
-                    .with_system_set(SystemSet::on_update(GameState::InGame)
-                        .with_system(race::update)
-                    )
-                    .with_system_set(SystemSet::on_enter(GameState::End).with_system(end_menu::setup))
-            ),
-        )
-        .register_rollback_type::<Transform>()
-        .build(&mut app);
-
     app.insert_resource(WindowDescriptor {
         title: "LD51".to_string(),
         canvas: Some("#bevy".to_owned()),
@@ -118,10 +95,7 @@ fn main() {
     })
     .insert_resource(ClearColor(Color::Rgba { red: 185.0 / 255.0, green: 229.0 / 255.0, blue: 241.0 / 255.0, alpha: 1.0 }))
     .insert_resource(GameData {
-        threshold: 9.0,
-    })
-    .insert_resource(MatchmakingTimer {
-        timer: Timer::from_seconds(5.0, false),
+        camera: None,
     })
     .add_event::<race::Alert>()
     .add_plugins(DefaultPlugins)
@@ -135,18 +109,36 @@ fn main() {
     .add_state(GameState::Loading)
     .add_system_set(
         SystemSet::on_enter(GameState::Matchmaking)
+            .with_system(lobby::setup)
             .with_system(lobby::start_matchbox_socket)
-            .with_system(race::setup),
     )
-    .add_system_set(SystemSet::on_update(GameState::Matchmaking).with_system(lobby::wait_for_players))
-    .add_system_set(SystemSet::on_enter(GameState::InGame).with_system(race::spawn_players))
+    .add_system_set(
+        SystemSet::on_update(GameState::Matchmaking)
+            .with_system(lobby::wait_for_players)
+            .with_system(lobby::button_system)
+    )
+    .add_system_set(
+        SystemSet::on_exit(GameState::Matchmaking)
+            .with_system(lobby::cleanup)
+    )
+    .add_system_set(
+        SystemSet::on_enter(GameState::InGame)
+            .with_system(race::setup)
+            .with_system(race::spawn_players))
     .add_system_set(
         SystemSet::on_update(GameState::InGame)
+            .with_system(race::update)
+            .with_system(race::update_rollback)
             .with_system(race::feedback_spawn)
             .with_system(race::feedback_update)
             .with_system(race::tick_timers)
             .with_system(race::camera_control)
     )
+    .add_system_set(
+        SystemSet::on_exit(GameState::InGame)
+            .with_system(race::cleanup)
+    )
+    .add_system_set(SystemSet::on_enter(GameState::End).with_system(end_menu::setup))
     .add_system_set(SystemSet::on_update(GameState::End).with_system(end_menu::update))
     .add_system(race::animate)
     .run();
