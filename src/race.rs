@@ -1,6 +1,6 @@
 use crate::{
-    Animation, AnimationState, GameAssets, GameState, LocalPlayerHandle, Player,
-    PlayerLocal, PlayerTarget, PlayerTimer,
+    Animation, AnimationState, GameAssets, GameState, Player, PlayerLocal,
+    PlayerTarget, PlayerTimer,
 };
 use benimator::FrameRate;
 use bevy::{prelude::*, time::Stopwatch, utils::Duration};
@@ -75,7 +75,6 @@ pub fn setup(mut commands: Commands, game_assets: Res<GameAssets>, audio: Res<Au
 pub fn spawn_players(
     mut commands: Commands,
     assets: Res<GameAssets>,
-    local_handle: Res<LocalPlayerHandle>,
     player_query: Query<Entity, With<Player>>,
 ) {
     //Despawn Old Players
@@ -83,7 +82,7 @@ pub fn spawn_players(
         commands.entity(player).despawn_recursive();
     }
 
-    let num_players = 2;
+    let num_players = 1;
     info!("Spawning {} players", num_players);
 
     let colors = vec![Color::WHITE, Color::CYAN, Color::GOLD, Color::GREEN];
@@ -102,7 +101,6 @@ pub fn spawn_players(
 
         builder
             .insert(Player {
-                handle: i,
                 cooldown_timer: Timer::from_seconds(0.5, false),
                 on_cooldown: false,
                 timing_index: 0,
@@ -116,36 +114,34 @@ pub fn spawn_players(
                 15..30,
                 FrameRate::from_fps(12.0),
             )))
-            .insert(AnimationState::default());
+            .insert(AnimationState::default())
+            .insert(PlayerLocal);
 
-        if i == local_handle.0 {
-            builder.insert(PlayerLocal);
-            let player_id = builder.id();
+        let player_id = builder.id();
 
-            //Indicator Cursor
-            let indicator_target_id = commands
-                .spawn_bundle(SpriteBundle {
-                    sprite: Sprite { ..default() },
-                    texture: assets.indicator_target.clone(),
-                    transform: Transform::from_translation(Vec3::new(0.0, -90.0, -1.0)),
-                    ..default()
-                })
-                .id();
+        //Indicator Cursor
+        let indicator_target_id = commands
+            .spawn_bundle(SpriteBundle {
+                sprite: Sprite { ..default() },
+                texture: assets.indicator_target.clone(),
+                transform: Transform::from_translation(Vec3::new(0.0, -90.0, -1.0)),
+                ..default()
+            })
+            .id();
 
-            //Indicator Target
-            let indicator_cursor_id = commands
-                .spawn_bundle(SpriteBundle {
-                    sprite: Sprite { ..default() },
-                    texture: assets.indicator_cursor.clone(),
-                    transform: Transform::from_translation(Vec3::new(0.0, -90.0, -1.0)),
-                    ..default()
-                })
-                .insert(IndicatorCursor)
-                .id();
+        //Indicator Target
+        let indicator_cursor_id = commands
+            .spawn_bundle(SpriteBundle {
+                sprite: Sprite { ..default() },
+                texture: assets.indicator_cursor.clone(),
+                transform: Transform::from_translation(Vec3::new(0.0, -90.0, -1.0)),
+                ..default()
+            })
+            .insert(IndicatorCursor)
+            .id();
 
-            commands.entity(player_id).add_child(indicator_target_id);
-            commands.entity(player_id).add_child(indicator_cursor_id);
-        }
+        commands.entity(player_id).add_child(indicator_target_id);
+        commands.entity(player_id).add_child(indicator_cursor_id);
     }
 }
 
@@ -208,7 +204,6 @@ pub fn update_rollback(
 }
 
 pub fn update(
-    local_handle: Res<LocalPlayerHandle>,
     mut state: ResMut<State<GameState>>,
     mut query: Query<(&mut Transform, &PlayerTarget, &mut PlayerTimer, &mut Player)>,
     mut cursor: Query<&mut Transform, (With<IndicatorCursor>, Without<Player>)>,
@@ -216,25 +211,22 @@ pub fn update(
     mut ev_alert: EventWriter<Alert>,
 ) {
     for (mut transform, target, mut player_timer, mut player) in &mut query {
-        if player.handle == local_handle.0 {
-            let elapsed = player_timer.stopwatch.elapsed_secs();
-            let mut text = text_query.single_mut();
-            text.sections[0].value = format!("{:.2}", elapsed);
+        let elapsed = player_timer.stopwatch.elapsed_secs();
+        let mut text = text_query.single_mut();
+        text.sections[0].value = format!("{:.2}", elapsed);
 
-            let mut cursor_transform = cursor.single_mut();
-            cursor_transform.translation.x =
-                -1920.0 + 1920.0 * 2.0 * player_timer.timer.percent_left();
+        let mut cursor_transform = cursor.single_mut();
+        cursor_transform.translation.x = -1920.0 + 1920.0 * 2.0 * player_timer.timer.percent_left();
 
-            if player_timer.timer.percent_left() < 0.35 {
-                player.timing_index = 0;
-                let next_timer = TIMINGS[player.timing_index];
-                player_timer
-                    .timer
-                    .set_duration(Duration::from_secs_f32(next_timer * 2.0));
-                player_timer.timer.reset();
+        if player_timer.timer.percent_left() < 0.35 {
+            player.timing_index = 0;
+            let next_timer = TIMINGS[player.timing_index];
+            player_timer
+                .timer
+                .set_duration(Duration::from_secs_f32(next_timer * 2.0));
+            player_timer.timer.reset();
 
-                ev_alert.send(Alert::Miss);
-            }
+            ev_alert.send(Alert::Miss);
         }
 
         transform.translation = transform.translation.lerp(

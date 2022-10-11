@@ -134,7 +134,6 @@ pub fn button_system(
     }
 }
 
-#[cfg(target_arch = "wasm32")]
 pub fn start_matchbox_socket() {
     let room_url = "wss://snails.nickspeaks.com/next_2";
     info!("Connecting to matchbox server: {:?}", room_url);

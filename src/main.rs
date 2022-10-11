@@ -51,7 +51,6 @@ pub struct GameAssets {
 
 #[derive(Component)]
 pub struct Player {
-    handle: usize,
     cooldown_timer: Timer,
     on_cooldown: bool,
     timing_index: usize,
