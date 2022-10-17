@@ -1,5 +1,4 @@
 use bevy::{prelude::*, render::camera::ScalingMode, sprite::Anchor};
-use matchbox_socket::WebRtcSocket;
 use crate::{GameData, GameAssets, GameState};
 
 #[derive(Component)]
@@ -163,7 +162,6 @@ pub fn cleanup(
     lobby: Res<Lobby>,
 
 ) {
-    commands.remove_resource::<Option<WebRtcSocket>>();
     commands.remove_resource::<Lobby>();
     commands.entity(lobby.node).despawn_recursive();
 }

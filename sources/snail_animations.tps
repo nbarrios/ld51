@@ -214,6 +214,39 @@
             <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red--miss_0013.png</key>
             <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red--miss_0014.png</key>
             <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red--miss_0015.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-fast_0001.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-fast_0002.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-fast_0003.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-fast_0004.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-fast_0005.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-fast_0006.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-fast_0007.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0001.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0002.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0003.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0004.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0005.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0006.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0007.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0008.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0009.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0010.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0011.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0001.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0002.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0003.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0004.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0005.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0006.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0007.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0008.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0009.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0010.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0011.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0012.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0013.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0014.png</key>
+            <key type="filename">E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0015.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -286,6 +319,39 @@
             <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red--miss_0013.png</filename>
             <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red--miss_0014.png</filename>
             <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red--miss_0015.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-fast_0001.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-fast_0002.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-fast_0003.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-fast_0004.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-fast_0005.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-fast_0006.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-fast_0007.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0001.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0002.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0003.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0004.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0005.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0006.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0007.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0008.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0009.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0010.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-medium_0011.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0001.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0002.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0003.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0004.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0005.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0006.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0007.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0008.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0009.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0010.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0011.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0012.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0013.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0014.png</filename>
+            <filename>E:/.shortcut-targets-by-id/1YlA3TOh46kdd1jqTeF55km92E9PpYJwp/LD51/CHARACTER/SNAIL 01/snail-red-walk-slow_0015.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

@@ -1,11 +1,11 @@
 // Simple plain text exporter for demo purposes
 // See http://www.grantlee.org/apidox/for_themers.html for more information
-// SmartUpdateHash: $TexturePacker:SmartUpdate:5509a5692b25d4db37309fed9d9122f1:a81abe1b6448bc6dfeeac3bad46b37af:dca9ca7346adabd29ae9dc0de00b3037$
+// SmartUpdateHash: $TexturePacker:SmartUpdate:c2d918286d5ea00f2fde745d7aa01fee:473634f8c9ef5682fad1f7a3f7b3666b:dca9ca7346adabd29ae9dc0de00b3037$
 
 (
     path: "snail_idle.png",
-    width: 3612,
-    height: 1510,
+    width: 3010,
+    height: 3926,
 
     sprites: NamedSprites ([
         (
@@ -17,204 +17,435 @@
         ),
         (
             name: "snail-red--miss_0002",
-            x: 603,
-            y: 1,
+            x: 1,
+            y: 303,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red--miss_0003",
-            x: 1205,
-            y: 1,
+            x: 1,
+            y: 605,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red--miss_0004",
-            x: 1807,
-            y: 1,
+            x: 1,
+            y: 907,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red--miss_0005",
-            x: 2409,
-            y: 1,
+            x: 1,
+            y: 1209,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red--miss_0006",
-            x: 3011,
-            y: 1,
+            x: 1,
+            y: 1511,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red--miss_0007",
             x: 1,
-            y: 303,
+            y: 1813,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red--miss_0008",
-            x: 603,
-            y: 303,
+            x: 1,
+            y: 2115,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red--miss_0009",
-            x: 1205,
-            y: 303,
+            x: 1,
+            y: 2417,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red--miss_0010",
-            x: 1807,
-            y: 303,
+            x: 1,
+            y: 2719,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red--miss_0011",
-            x: 2409,
-            y: 303,
+            x: 1,
+            y: 3021,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red--miss_0012",
-            x: 3011,
-            y: 303,
+            x: 1,
+            y: 3323,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red--miss_0013",
             x: 1,
-            y: 605,
+            y: 3625,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red--miss_0014",
             x: 603,
-            y: 605,
+            y: 1,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red--miss_0015",
-            x: 1205,
-            y: 605,
+            x: 603,
+            y: 303,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red-idle_0001",
-            x: 1807,
+            x: 603,
             y: 605,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red-idle_0002",
-            x: 2409,
-            y: 605,
+            x: 603,
+            y: 907,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red-idle_0003",
-            x: 3011,
-            y: 605,
+            x: 603,
+            y: 1209,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red-idle_0004",
-            x: 1,
-            y: 907,
+            x: 603,
+            y: 1511,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red-idle_0005",
             x: 603,
-            y: 907,
+            y: 1813,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red-idle_0006",
-            x: 1205,
-            y: 907,
+            x: 603,
+            y: 2115,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red-idle_0007",
-            x: 1807,
-            y: 907,
+            x: 603,
+            y: 2417,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red-idle_0008",
-            x: 2409,
-            y: 907,
+            x: 603,
+            y: 2719,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red-idle_0009",
-            x: 3011,
-            y: 907,
+            x: 603,
+            y: 3021,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red-idle_0010",
-            x: 1,
-            y: 1209,
+            x: 603,
+            y: 3323,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red-idle_0011",
             x: 603,
-            y: 1209,
+            y: 3625,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red-idle_0012",
             x: 1205,
-            y: 1209,
+            y: 1,
             w: 600,
             h: 300
         ),
         (
             name: "snail-red-idle_0013",
+            x: 1205,
+            y: 303,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-idle_0014",
+            x: 1205,
+            y: 605,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-idle_0015",
+            x: 1205,
+            y: 907,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-fast_0001",
+            x: 1205,
+            y: 1209,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-fast_0002",
+            x: 1205,
+            y: 1511,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-fast_0003",
+            x: 1205,
+            y: 1813,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-fast_0004",
+            x: 1205,
+            y: 2115,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-fast_0005",
+            x: 1205,
+            y: 2417,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-fast_0006",
+            x: 1205,
+            y: 2719,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-fast_0007",
+            x: 1205,
+            y: 3021,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-medium_0001",
+            x: 1205,
+            y: 3323,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-medium_0002",
+            x: 1205,
+            y: 3625,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-medium_0003",
+            x: 1807,
+            y: 1,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-medium_0004",
+            x: 1807,
+            y: 303,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-medium_0005",
+            x: 1807,
+            y: 605,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-medium_0006",
+            x: 1807,
+            y: 907,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-medium_0007",
             x: 1807,
             y: 1209,
             w: 600,
             h: 300
         ),
         (
-            name: "snail-red-idle_0014",
+            name: "snail-red-walk-medium_0008",
+            x: 1807,
+            y: 1511,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-medium_0009",
+            x: 1807,
+            y: 1813,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-medium_0010",
+            x: 1807,
+            y: 2115,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-medium_0011",
+            x: 1807,
+            y: 2417,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-slow_0001",
+            x: 1807,
+            y: 2719,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-slow_0002",
+            x: 1807,
+            y: 3021,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-slow_0003",
+            x: 1807,
+            y: 3323,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-slow_0004",
+            x: 1807,
+            y: 3625,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-slow_0005",
+            x: 2409,
+            y: 1,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-slow_0006",
+            x: 2409,
+            y: 303,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-slow_0007",
+            x: 2409,
+            y: 605,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-slow_0008",
+            x: 2409,
+            y: 907,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-slow_0009",
             x: 2409,
             y: 1209,
             w: 600,
             h: 300
         ),
         (
-            name: "snail-red-idle_0015",
-            x: 3011,
-            y: 1209,
+            name: "snail-red-walk-slow_0010",
+            x: 2409,
+            y: 1511,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-slow_0011",
+            x: 2409,
+            y: 1813,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-slow_0012",
+            x: 2409,
+            y: 2115,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-slow_0013",
+            x: 2409,
+            y: 2417,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-slow_0014",
+            x: 2409,
+            y: 2719,
+            w: 600,
+            h: 300
+        ),
+        (
+            name: "snail-red-walk-slow_0015",
+            x: 2409,
+            y: 3021,
             w: 600,
             h: 300
         ),

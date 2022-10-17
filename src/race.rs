@@ -1,19 +1,21 @@
-use crate::{
-    Animation, AnimationState, GameAssets, GameState, Player, PlayerLocal,
-    PlayerTarget, PlayerTimer,
+use crate::components::{
+    Animation, AnimationState, GameAssets, GameState, Player, PlayerLocal, PlayerTarget,
+    PlayerTimer,
 };
 use benimator::FrameRate;
-use bevy::{prelude::*, time::Stopwatch, utils::Duration};
+use bevy::{prelude::*, time::Stopwatch, utils::Duration, ecs::system::EntityCommands};
+use std::ops::Range;
 
 const SPAWN_X: f32 = 1920.0 * -0.25;
 const TIMINGS: [f32; 5] = [10.0, 5.0, 3.0, 2.0, 1.0];
 
 #[derive(Debug, Eq, PartialEq)]
-pub enum Alert {
-    Miss,
-    Ok,
-    Good,
-    Perfect,
+pub enum PlayerEvent {
+    Idle(Entity),
+    Miss(Entity),
+    Ok(Entity),
+    Good(Entity),
+    Perfect(Entity),
 }
 
 #[derive(Component)]
@@ -154,10 +156,21 @@ pub fn cleanup(mut commands: Commands, player_query: Query<Entity, With<Player>>
 
 pub fn animate(
     time: Res<Time>,
-    mut query: Query<(&mut AnimationState, &mut TextureAtlasSprite, &Animation)>,
+    mut query: Query<(
+        Entity,
+        &mut AnimationState,
+        &mut TextureAtlasSprite,
+        &Animation,
+    )>,
+    mut ev_alert: EventWriter<PlayerEvent>,
 ) {
-    for (mut state, mut sprite, animation) in &mut query {
+    for (entity, mut state, mut sprite, animation) in &mut query {
         state.update(animation, time.delta());
+
+        if state.is_ended() {
+            ev_alert.send(PlayerEvent::Idle(entity));
+        }
+
         sprite.index = state.frame_index();
     }
 }
@@ -165,26 +178,26 @@ pub fn animate(
 pub fn update_rollback(
     mut _commands: Commands,
     inputs: Res<Input<KeyCode>>,
-    mut query: Query<(&mut PlayerTarget, &mut PlayerTimer, &mut Player)>,
-    mut ev_alert: EventWriter<Alert>,
+    mut query: Query<(Entity, &mut PlayerTarget, &mut PlayerTimer, &mut Player)>,
+    mut ev_alert: EventWriter<PlayerEvent>,
 ) {
-    for (mut target, mut player_timer, mut player) in &mut query {
+    for (entity, mut target, mut player_timer, mut player) in &mut query {
         if inputs.just_pressed(KeyCode::Space) && !player.on_cooldown {
-            let threshold = match (player_timer.timer.percent_left() - 0.5).abs() {
-                x if x < 0.01 => Alert::Perfect,
-                x if x < 0.05 => Alert::Good,
-                x if x < 0.1 => Alert::Ok,
-                _ => Alert::Miss,
+            let alert_threshold = match (player_timer.timer.percent_left() - 0.5).abs() {
+                x if x < 0.01 => PlayerEvent::Perfect(entity),
+                x if x < 0.05 => PlayerEvent::Good(entity),
+                x if x < 0.1 => PlayerEvent::Ok(entity),
+                _ => PlayerEvent::Miss(entity),
             };
 
-            target.x += match threshold {
-                Alert::Perfect => 500.0,
-                Alert::Good => 250.0,
-                Alert::Ok => 125.0,
-                Alert::Miss => 0.0,
+            target.x += match alert_threshold {
+                PlayerEvent::Perfect(_) => 500.0,
+                PlayerEvent::Good(_) => 250.0,
+                PlayerEvent::Ok(_) => 125.0,
+                _ => 0.0,
             };
 
-            ev_alert.send(threshold);
+            ev_alert.send(alert_threshold);
 
             if (player_timer.timer.percent_left() - 0.5).abs() < 0.05 {
                 player.timing_index += 1;
@@ -205,12 +218,18 @@ pub fn update_rollback(
 
 pub fn update(
     mut state: ResMut<State<GameState>>,
-    mut query: Query<(&mut Transform, &PlayerTarget, &mut PlayerTimer, &mut Player)>,
+    mut query: Query<(
+        Entity,
+        &mut Transform,
+        &PlayerTarget,
+        &mut PlayerTimer,
+        &mut Player,
+    )>,
     mut cursor: Query<&mut Transform, (With<IndicatorCursor>, Without<Player>)>,
     mut text_query: Query<&mut Text, With<StopwatchText>>,
-    mut ev_alert: EventWriter<Alert>,
+    mut ev_alert: EventWriter<PlayerEvent>,
 ) {
-    for (mut transform, target, mut player_timer, mut player) in &mut query {
+    for (entity, mut transform, target, mut player_timer, mut player) in &mut query {
         let elapsed = player_timer.stopwatch.elapsed_secs();
         let mut text = text_query.single_mut();
         text.sections[0].value = format!("{:.2}", elapsed);
@@ -226,12 +245,12 @@ pub fn update(
                 .set_duration(Duration::from_secs_f32(next_timer * 2.0));
             player_timer.timer.reset();
 
-            ev_alert.send(Alert::Miss);
+            ev_alert.send(PlayerEvent::Miss(entity));
         }
 
         transform.translation = transform.translation.lerp(
             Vec3::new(target.x, transform.translation.y, transform.translation.z),
-            0.05,
+            0.026,
         );
 
         if transform.translation.x > 10300.0 {
@@ -244,35 +263,38 @@ pub fn update(
 pub fn feedback_spawn(
     mut commands: Commands,
     assets: Res<GameAssets>,
-    mut ev_alert: EventReader<Alert>,
+    mut ev_alert: EventReader<PlayerEvent>,
     player_query: Query<&Transform, With<PlayerLocal>>,
     audio: Res<Audio>,
 ) {
     let player_transform = player_query.single();
     for ev in ev_alert.iter() {
-        commands
-            .spawn_bundle(SpriteBundle {
-                sprite: Sprite { ..default() },
-                texture: match ev {
-                    Alert::Perfect => assets.alert_perfect.clone(),
-                    Alert::Good => assets.alert_good.clone(),
-                    Alert::Ok => assets.alert_ok.clone(),
-                    Alert::Miss => assets.alert_miss.clone(),
-                },
-                transform: Transform::from_translation(Vec3::new(
-                    player_transform.translation.x + 600.0,
-                    100.0,
-                    1.0,
-                )),
-                ..default()
-            })
-            .insert(AlertSprite);
+        if !matches!(ev, PlayerEvent::Idle(_)) {
+            commands
+                .spawn_bundle(SpriteBundle {
+                    sprite: Sprite { ..default() },
+                    texture: match ev {
+                        PlayerEvent::Perfect(_) => assets.alert_perfect.clone(),
+                        PlayerEvent::Good(_) => assets.alert_good.clone(),
+                        PlayerEvent::Ok(_) => assets.alert_ok.clone(),
+                        PlayerEvent::Miss(_) => assets.alert_miss.clone(),
+                        _ => todo!("Already checked for this above."),
+                    },
+                    transform: Transform::from_translation(Vec3::new(
+                        player_transform.translation.x + 600.0,
+                        100.0,
+                        1.0,
+                    )),
+                    ..default()
+                })
+                .insert(AlertSprite);
 
-        if ev != &Alert::Miss {
-            let _weak_handle = audio.play_with_settings(
-                assets.match_sound.clone(),
-                PlaybackSettings::ONCE.with_volume(0.5),
-            );
+            if let PlayerEvent::Miss(_) = ev {
+                let _weak_handle = audio.play_with_settings(
+                    assets.match_sound.clone(),
+                    PlaybackSettings::ONCE.with_volume(0.5),
+                );
+            }
         }
     }
 }
@@ -287,6 +309,40 @@ pub fn feedback_update(
         sprite.color.set_a(alpha - 1.0 * time.delta_seconds());
         if sprite.color.a() <= 0.0 {
             commands.entity(entity).despawn_recursive();
+        }
+    }
+}
+
+pub fn change_animation(mut commands: Commands, mut ev_alert: EventReader<PlayerEvent>) {
+    let mut change_animation_components = |indices: Range<usize>, entity: &Entity| {
+            let mut entity_commands = commands.entity(*entity);
+            entity_commands.remove::<Animation>();
+            entity_commands.remove::<AnimationState>();
+            entity_commands
+                .insert(Animation(
+                    benimator::Animation::from_indices(indices, FrameRate::from_fps(12.0)).once(),
+                ))
+                .insert(AnimationState::default());
+    };
+
+    for ev in ev_alert.iter() {
+        match ev {
+            PlayerEvent::Idle(entity) => {
+                change_animation_components(15..30, entity);
+            }
+            PlayerEvent::Miss(entity) => {
+                change_animation_components(0..15, entity);
+            }
+            PlayerEvent::Perfect(entity) => {
+                change_animation_components(30..37, entity);
+            }
+            PlayerEvent::Good(entity) => {
+                change_animation_components(37..48, entity);
+            }
+            PlayerEvent::Ok(entity) => {
+                change_animation_components(48..63, entity);
+            }
+            _ => {}
         }
     }
 }

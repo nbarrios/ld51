@@ -1,84 +1,14 @@
+mod components;
 mod input;
 mod lobby;
 mod race;
 mod end_menu;
 
-use bevy::{prelude::*, time::Stopwatch};
+use bevy::{prelude::*};
 use bevy_asset_loader::prelude::*;
 use bevy_heterogeneous_texture_atlas_loader::*;
+use components::*;
 
-pub struct LocalPlayerHandle(usize);
-
-#[derive(Clone, Eq, PartialEq, Debug, Hash)]
-pub enum GameState {
-    Loading,
-    Matchmaking,
-    InGame,
-    End,
-}
-
-#[derive(AssetCollection)]
-pub struct GameAssets {
-    #[asset(path = "fonts/Courier New Bold.ttf")]
-    font: Handle<Font>,
-    #[asset(path = "textures/ground-grass-seamless_00.png")]
-    grass: Handle<Image>,
-    #[asset(path = "textures/ground-finish-seamless_00.png")]
-    finish: Handle<Image>,
-    #[asset(path = "textures/match-indicator_target.png")]
-    indicator_target: Handle<Image>,
-    #[asset(path = "textures/match-indicator_cursor.png")]
-    indicator_cursor: Handle<Image>,
-    #[asset(path = "textures/alert_miss.png")]
-    alert_miss: Handle<Image>,
-    #[asset(path = "textures/alert_ok.png")]
-    alert_ok: Handle<Image>,
-    #[asset(path = "textures/alert_good.png")]
-    alert_good: Handle<Image>,
-    #[asset(path = "textures/alert_perfect.png")]
-    alert_perfect: Handle<Image>,
-    #[asset(path = "textures/menu-tryagain.png")]
-    try_again: Handle<Image>,
-    #[asset(path = "snail_idle.ron")]
-    snail_idle: Handle<TextureAtlas>,
-    #[asset(path = "hidethesalt.ogg")]
-    music: Handle<AudioSource>,
-    #[asset(path = "match.ogg")]
-    match_sound: Handle<AudioSource>,
-    #[asset(path = "cheering crowd.ogg")]
-    crowd_sound: Handle<AudioSource>,
-}
-
-#[derive(Component)]
-pub struct Player {
-    cooldown_timer: Timer,
-    on_cooldown: bool,
-    timing_index: usize,
-}
-
-#[derive(Component, Default, Reflect)]
-pub struct PlayerTimer {
-    timer: Timer,
-    stopwatch: Stopwatch
-}
-
-#[derive(Component, Default, Reflect)]
-pub struct PlayerTarget {
-    x: f32,
-}
-
-#[derive(Component)]
-pub struct PlayerLocal;
-
-pub struct GameData {
-    camera: Option<Entity>
-}
-
-#[derive(Component, Deref)]
-pub struct Animation(benimator::Animation);
-
-#[derive(Default, Component, Deref, DerefMut)]
-pub struct AnimationState(benimator::State);
 
 fn main() {
     // When building for WASM, print panics to the browser console
@@ -96,7 +26,7 @@ fn main() {
     .insert_resource(GameData {
         camera: None,
     })
-    .add_event::<race::Alert>()
+    .add_event::<race::PlayerEvent>()
     .add_plugins(DefaultPlugins)
     //.add_plugin(bevy_web_resizer::Plugin)
     .add_plugin(TextureAtlasLoaderPlugin)
@@ -128,6 +58,7 @@ fn main() {
         SystemSet::on_update(GameState::InGame)
             .with_system(race::update)
             .with_system(race::update_rollback)
+            .with_system(race::change_animation)
             .with_system(race::feedback_spawn)
             .with_system(race::feedback_update)
             .with_system(race::tick_timers)
