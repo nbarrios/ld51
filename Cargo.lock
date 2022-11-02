@@ -1909,19 +1909,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "830d08ce1d1d941e6b30645f1a0eb5643013d835ce3779a5fc208261dbe10f55"
 
 [[package]]
-name = "ld51"
-version = "0.1.0"
-dependencies = [
- "benimator",
- "bevy",
- "bevy-web-resizer",
- "bevy_asset_loader",
- "bevy_heterogeneous_texture_atlas_loader",
- "console_error_panic_hook",
- "rand",
-]
-
-[[package]]
 name = "lewton"
 version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2810,6 +2797,19 @@ dependencies = [
  "wayland-client",
  "wayland-cursor",
  "wayland-protocols",
+]
+
+[[package]]
+name = "snails_pace"
+version = "0.1.0"
+dependencies = [
+ "benimator",
+ "bevy",
+ "bevy-web-resizer",
+ "bevy_asset_loader",
+ "bevy_heterogeneous_texture_atlas_loader",
+ "console_error_panic_hook",
+ "rand",
 ]
 
 [[package]]
